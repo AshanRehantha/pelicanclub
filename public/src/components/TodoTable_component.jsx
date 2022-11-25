@@ -19,7 +19,6 @@ const TodoTable_component = () => {
   const [clickSort, setClickSort] = useState(false);
 
   useEffect(() => {
-    console.log("ok");
     actionDispatch(todoListRequest())
   },[]);
 
@@ -44,6 +43,14 @@ const TodoTable_component = () => {
       setClickSort(true)
     }else{
       setClickSort(false)
+    }
+  }
+
+  function disabledButton() {
+    if(newTodo == ""){
+        return true
+    }else{
+      return false
     }
   }
 
@@ -91,6 +98,7 @@ const TodoTable_component = () => {
               text={'Add New Todo'}
               variant="primary"
               onClick={onClick}
+              disabled={disabledButton()}
             />
           </div>
     </React.Fragment>
