@@ -1,0 +1,50 @@
+version: '3.7'
+
+services:
+    # -----------------------------------------------
+    #           Redis
+    # -----------------------------------------------
+  redis:
+    image: pelican-club-redis-web
+    container_name: pelican-club-redis-web
+    build:
+        context: .
+        dockerfile: docker/redis/Dockerfile
+    command: redis-server --requirepass pelicanclub2020% --appendonly yes
+    restart: always
+    networks:
+        - pelican-club-core-web
+    volumes:
+        - redisdata:/data
+    deploy:
+        replicas: 1
+    ports:
+        - "6394:6388"
+  #----------------------------------
+  #        WebPortal
+  #----------------------------------      
+  web-portal:
+    image: "pelican-club-web-portal"
+    container_name: "pelican-club-web_portal"
+    env_file:
+        - ./config/.env
+    build:
+        context: .
+        dockerfile: docker/web_portal/Dockerfile   
+    ports:
+        - "8090:8090"
+        - "3033:3033"
+    volumes:
+        - ./:/app/
+    networks:
+        - pelican-club-core-web
+    depends_on:
+        - redis
+networks:
+    pelican-club-core-web:
+        driver: bridge
+volumes:
+    redisdata:
+
+
+
